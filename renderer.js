@@ -1,15 +1,38 @@
 const Vue = require('vue/dist/vue.min.js');
 
+const roll = function(num, dice) {
+    let total = 0;
+    for (let i=0; i < num; i++) {
+        total += Math.floor(Math.random() * dice + 1);
+    }
+    return total;
+};
+
 let app = new Vue({
     el: '#app',
     data: function () {
         return {
             message: 'Hello Vue!',
+            baseDice: '1d10',
             enemies: [],
             newEnemyName: "",
             newEnemyArmor: 0,
             newEnemyHealth: 0,
+            newEnemyInitiative: 0,
+            newInitiativeOverride: -1,
         };
+    },
+    computed: {
+        baseDiceParsed() {
+            const diceRe = /^(?<num>\d+)d(?<dice>\d+)$/;
+            matchObj = this.baseDice.match(diceRe);
+            if (matchObj === null) {
+                console.error("Invalid base dice given!");
+                return [-100, -100];
+            }
+
+            return [matchObj.groups.num, matchObj.groups.dice];
+        },
     },
     methods: {
         createEnemy() {
@@ -33,6 +56,9 @@ let app = new Vue({
                     armor: this.newEnemyArmor,
                     armorTotal: this.newEnemyArmor,
                     armorIncra: 1,
+                    initiative: this.newEnemyInitiative,
+                    initiativeOverride: this.newInitiativeOverride,
+                    currInit: 0,
                 };
 
                 if (numOfEnemies === 1) {
@@ -44,6 +70,28 @@ let app = new Vue({
         },
         removeEnemy(idx) {
             this.enemies.splice(idx, 1);
+        },
+        rollInitiative() {
+            let [num, dice] = this.baseDiceParsed;
+            this.enemies.forEach((enemy) => {
+                if (enemy.initiativeOverride <= -1) {
+                    enemy.currInit = roll(num, dice) + enemy.initiative;
+                } else {
+                    enemy.currInit = enemy.initiativeOverride;
+                }
+            });
+        },
+        sortByInitiative() {
+            this.enemies.sort((enemy1, enemy2) => {
+                let enemy1Init = (enemy1.initiativeOverride > -1)
+                                 ? enemy1.initiativeOverride
+                                   : enemy1.currInit;
+
+                let enemy2Init = (enemy2.initiativeOverride > -1)
+                    ? enemy2.initiativeOverride
+                    : enemy2.currInit;
+                return enemy2Init - enemy1Init;
+            });
         },
     },
     mounted() {

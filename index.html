@@ -30,22 +30,47 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mb-2">
                             <div class="col">
                                 <div class="input-group">
                                     <label class="input-group-text" for="name">Name</label>
                                     <input v-model="newEnemyName"
-                                        class="form-control" name="name" type="text" value=""/>
+                                        class="form-control" name="name" type="text"/>
 
                                     <label class="input-group-text" for="armor">Armor</label>
                                     <input v-model.number="newEnemyArmor"
-                                        class="form-control" name="armor" type="number" value=""/>
+                                        class="form-control incra" name="armor" type="number"/>
 
-                                    <label class="input-group-text" for="health">Health</label>
+                                    <label class="input-group-text" for="health">HP</label>
                                     <input v-model.number="newEnemyHealth"
-                                        class="form-control" name="health" type="number" value=""/>
+                                        class="form-control incra" name="health" type="number"/>
 
-                                    <button class="btn btn-primary" @click="createEnemy()">Create Enemy</button>
+                                    <label class="input-group-text" for="initiative">Init.</label>
+                                    <input v-model.number="newEnemyInitiative"
+                                           class="form-control incra" name="initiative" type="number" />
+
+                                    <label class="input-group-text" for="initiative-override">
+                                        Init. Override
+                                    </label>
+                                    <input v-model.number="newInitiativeOverride"
+                                           class="form-control incra" name="initiative-override" type="number"/>
+
+                                    <button class="btn btn-primary" @click="createEnemy()">Create</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="input-group">
+                                    <label class="input-group-text" for="base-dice">
+                                        Base Dice
+                                    </label>
+                                    <input v-model="baseDice" name="base-dice"
+                                           class="form-control" type="text"/>
+                                    <button @click="rollInitiative()"
+                                            class="btn btn-secondary">Roll Initiative</button>
+                                    <button @click="sortByInitiative()"
+                                            class="btn btn-info">Sort by Initiative</button>
                                 </div>
                             </div>
                         </div>
@@ -58,7 +83,9 @@
                                     <div class="row">
                                         <h3>{{enemy.name}}</h3>
                                     </div>
-                                    <div class="row">
+
+                                    <!-- Enemy Armor/Health Values -->
+                                    <div class="row mb-2">
                                         <div class="col-5">
                                             <div class="input-group">
                                                 <span class="input-group-text">
@@ -83,6 +110,46 @@
                                                        class="form-control incra" type="number"/>
                                                 <button @click="enemy.health+=enemy.healthIncra"
                                                         class="btn btn-sm btn-success incra-btn">></button>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-2">
+                                             <button class="btn btn-danger"
+                                             @click="removeEnemy(idx)">Remove</button>
+                                             </div> -->
+                                    </div>
+
+                                    <!-- Enemy Initiative Values -->
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <div class="input-group">
+                                                <span v-if="enemy.initiativeOverride <= -1"
+                                                      class="input-group-text">
+                                                    Initiative: <strong>{{ enemy.currInit }}</strong>
+                                                </span>
+                                                <span v-else
+                                                      class="input-group-text">
+                                                    Initiative: <strong>{{ enemy.initiativeOverride }}</strong>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    Initiative Bonus: {{enemy.initiative}}
+                                                </span>
+                                                <button @click="enemy.initiative--"
+                                                        class="btn btn-sm btn-warning incra-btn"><</button>
+                                                <button @click="enemy.initiative++"
+                                                        class="btn btn-sm btn-success incra-btn">></button>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    Override:
+                                                </span>
+                                                <input v-model.number="enemy.initiativeOverride"
+                                                       class="form-control incra" type="number"/>
                                             </div>
                                         </div>
                                         <div class="col-2">
