@@ -1,0 +1,19 @@
+body {
+    background-color: #292b2e;
+    color: #d3d3d3;
+}
+
+input {
+    background-color: #989899;
+}
+
+.incra-btn {
+    font-weight: bold;
+    font-size: 25px;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.incra {
+    flex: 0.2 1 auto !important;
+}

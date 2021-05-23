@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Hello World!</title>
+        <link href="./bootstrap.min.css" rel="stylesheet"/>
+        <link href="./style.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <div id="app">
+            <div class="row">
+                <div class="col">
+                    <h1>Hello World!</h1>
+                    <p>
+                        We are using Node.js <span id="node-version"></span>,
+                        Chromium <span id="chrome-version"></span>,
+                        and Electron <span id="electron-version"></span>.
+                    </p>
+
+                    <div id="notifications">
+                        <p>
+                            <button class="btn btn-secondary"
+                                    id="notify" @click="notify()">Notify Me!</button>
+                            <span> || </span>
+                            <button class="btn btn-secondary"
+                                    id="notifyMain">Notify From Main!</button>
+                        </p>
+                    </div>
+                    <a href="index.html">{{home}}</a>
+                </div>
+            </div>
+        </div>
+
+        <script>
+         const Vue = require('vue/dist/vue.min.js');
+
+         let app = new Vue({
+             el: '#app',
+             data: function () {
+                 return {
+                     home: 'Return to Home',
+                 };
+             },
+             methods: {
+                 notify() {
+                     const myNotification = new Notification('Title', {
+                         body: 'Notification from the Renderer process'
+                     });
+
+                     myNotification.onclick = () => {
+                         console.log('Notification clicked');
+                     };
+                 },
+             },
+         });
+        </script>
+    </body>
+</html>

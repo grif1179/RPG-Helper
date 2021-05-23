@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Hello World!</title>
+        <link href="./bootstrap.min.css" rel="stylesheet"/>
+        <link href="./style.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <div id="app" class="container">
+            <!-- <a href="test.html">Test Link</a> -->
+            <div class="row">
+                <div class="col">
+                    <h1>Enemy Encounter Counter</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="row mb-4">
+                        <div class="row">
+                            <div class="col">
+                                <p>
+                                    <em>
+                                        To create multiple enemies at once with the same stats
+                                        write the name with a <strong>[number]</strong> at the end
+                                        <strong>i.e. goon[5]</strong>
+                                        <br/>
+                                        This will create 5 goons with the same stats.
+                                    </em>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <label class="input-group-text" for="name">Name</label>
+                                    <input v-model="newEnemyName"
+                                        class="form-control" name="name" type="text" value=""/>
+
+                                    <label class="input-group-text" for="armor">Armor</label>
+                                    <input v-model.number="newEnemyArmor"
+                                        class="form-control" name="armor" type="number" value=""/>
+
+                                    <label class="input-group-text" for="health">Health</label>
+                                    <input v-model.number="newEnemyHealth"
+                                        class="form-control" name="health" type="number" value=""/>
+
+                                    <button class="btn btn-primary" @click="createEnemy()">Create Enemy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <ul class="list-group">
+                                <li v-for="(enemy, idx) in enemies" :key="idx"
+                                    class="list-group-item bg-dark text-white">
+                                    <div class="row">
+                                        <h3>{{enemy.name}}</h3>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    Armor: {{enemy.armor}} / {{enemy.armorTotal}}
+                                                </span>
+                                                <button @click="enemy.armor-=enemy.armorIncra"
+                                                        class="btn btn-sm btn-warning incra-btn"><</button>
+                                                <input v-model.number="enemy.armorIncra"
+                                                        class="form-control incra" type="number"/>
+                                                <button @click="enemy.armor+=enemy.armorIncra"
+                                                        class="btn btn-sm btn-success incra-btn">></button>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    Health: {{enemy.health}} / {{enemy.healthTotal}}
+                                                </span>
+                                                <button @click="enemy.health-=enemy.healthIncra"
+                                                        class="btn btn-sm btn-warning incra-btn"><</button>
+                                                <input v-model.number="enemy.healthIncra"
+                                                       class="form-control incra" type="number"/>
+                                                <button @click="enemy.health+=enemy.healthIncra"
+                                                        class="btn btn-sm btn-success incra-btn">></button>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <button class="btn btn-danger"
+                                                    @click="removeEnemy(idx)">Remove</button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="renderer.js"></script>
+    </body>
+</html>
